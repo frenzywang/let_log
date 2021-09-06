@@ -95,33 +95,31 @@ class Logger extends StatelessWidget {
 
   /// Logging
   static void log(Object message, [Object? detail]) {
-    if (enabled) _Log.add(_Type.log, message, detail!);
+    if (enabled) _Log.add(_Type.log, message, detail);
   }
 
   /// Record debug information
   static void debug(Object message, [Object? detail]) {
-    if (enabled) _Log.add(_Type.debug, message, detail!);
+    if (enabled) _Log.add(_Type.debug, message, detail);
   }
 
   /// Record warnning information
   static void warn(Object message, [Object? detail]) {
-    if (enabled) _Log.add(_Type.warn, message, detail!);
+    if (enabled) _Log.add(_Type.warn, message, detail);
   }
 
   /// Record error information
   static void error(Object message, [Object? detail]) {
-    if (enabled) _Log.add(_Type.error, message, detail!);
+    if (enabled) _Log.add(_Type.error, message, detail);
   }
 
   /// Start recording time
   static void time(Object key) {
-    assert(key != null);
     if (enabled) _Log.time(key);
   }
 
   /// End of record time
   static void endTime(Object key) {
-    assert(key != null);
     if (enabled) _Log.endTime(key);
   }
 

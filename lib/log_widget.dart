@@ -1,7 +1,7 @@
 part of let_log;
 
 class LogWidget extends StatefulWidget {
-  const LogWidget({Key key}) : super(key: key);
+  const LogWidget({Key? key}) : super(key: key);
 
   @override
   _LogWidgetState createState() => _LogWidgetState();
@@ -10,9 +10,9 @@ class LogWidget extends StatefulWidget {
 class _LogWidgetState extends State<LogWidget> {
   bool _showSearch = false;
   String _keyword = "";
-  TextEditingController _textController;
-  ScrollController _scrollController;
-  FocusNode _focusNode;
+  late TextEditingController _textController;
+  late ScrollController _scrollController;
+  late FocusNode _focusNode;
   bool _goDown = true;
 
   @override
@@ -44,19 +44,16 @@ class _LogWidgetState extends State<LogWidget> {
                 List<_Log> logs = _Log.list;
                 if (_selectTypes.length < 4 || _keyword.isNotEmpty) {
                   logs = _Log.list.where((test) {
-                    return _selectTypes.contains(test.type) &&
-                        test.contains(_keyword);
+                    return _selectTypes.contains(test.type) && test.contains(_keyword);
                   }).toList();
                 }
 
                 final len = logs.length;
                 return ListView.separated(
                   itemBuilder: (context, index) {
-                    final item = Logger.config.reverse
-                        ? logs[len - index - 1]
-                        : logs[index];
-                    final color = _getColor(item.type, context);
-                    return _buildItem(item, color);
+                    final item = Logger.config.reverse ? logs[len - index - 1] : logs[index];
+                    final color = _getColor(item.type!, context);
+                    return _buildItem(item, color!);
                   },
                   itemCount: len,
                   controller: _scrollController,
@@ -126,14 +123,14 @@ class _LogWidgetState extends State<LogWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${item.tabName} ${item.message} (${item.start.hour}:${item.start.minute}:${item.start.second}:${item.start.millisecond})",
+              "${item.tabName} ${item.message} (${item.start!.hour}:${item.start!.minute}:${item.start!.second}:${item.start!.millisecond})",
               style: TextStyle(fontSize: 16, color: color),
             ),
             if (item.detail != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  item.detail,
+                  item.detail!,
                   style: TextStyle(fontSize: 14, color: color),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 20,
@@ -145,7 +142,7 @@ class _LogWidgetState extends State<LogWidget> {
     );
   }
 
-  Color _getColor(_Type type, BuildContext context) {
+  Color? _getColor(_Type type, BuildContext context) {
     switch (type) {
       case _Type.debug:
         return Colors.blue;
@@ -154,16 +151,11 @@ class _LogWidgetState extends State<LogWidget> {
       case _Type.error:
         return Colors.red;
       default:
-        return Theme.of(context).textTheme.bodyText1.color;
+        return Theme.of(context).textTheme.bodyText1!.color;
     }
   }
 
-  final List<_Type> _selectTypes = [
-    _Type.log,
-    _Type.debug,
-    _Type.warn,
-    _Type.error
-  ];
+  final List<_Type> _selectTypes = [_Type.log, _Type.debug, _Type.warn, _Type.error];
 
   Widget _buildTools() {
     final List<ChoiceChip> arr = [];
@@ -177,9 +169,7 @@ class _LogWidgetState extends State<LogWidget> {
           selectedColor: const Color(0xFFCBE2F6),
           selected: _selectTypes.contains(f),
           onSelected: (value) {
-            _selectTypes.contains(f)
-                ? _selectTypes.remove(f)
-                : _selectTypes.add(f);
+            _selectTypes.contains(f) ? _selectTypes.remove(f) : _selectTypes.add(f);
             setState(() {});
           },
         ),
@@ -188,8 +178,7 @@ class _LogWidgetState extends State<LogWidget> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 5, 0, 5),
       child: AnimatedCrossFade(
-        crossFadeState:
-            _showSearch ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        crossFadeState: _showSearch ? CrossFadeState.showSecond : CrossFadeState.showFirst,
         duration: const Duration(milliseconds: 300),
         firstChild: Row(
           children: [
@@ -204,9 +193,7 @@ class _LogWidgetState extends State<LogWidget> {
               onPressed: _Log.clear,
             ),
             IconButton(
-              icon: _keyword.isEmpty
-                  ? const Icon(Icons.search)
-                  : const Icon(Icons.filter_1),
+              icon: _keyword.isEmpty ? const Icon(Icons.search) : const Icon(Icons.filter_1),
               onPressed: () {
                 _showSearch = true;
                 setState(() {});

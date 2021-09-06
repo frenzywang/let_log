@@ -1,7 +1,7 @@
 part of let_log;
 
 class NetWidget extends StatefulWidget {
-  const NetWidget({Key key}) : super(key: key);
+  const NetWidget({Key? key}) : super(key: key);
 
   @override
   _NetWidgetState createState() => _NetWidgetState();
@@ -10,9 +10,9 @@ class NetWidget extends StatefulWidget {
 class _NetWidgetState extends State<NetWidget> {
   bool _showSearch = false;
   String _keyword = "";
-  TextEditingController _textController;
-  ScrollController _scrollController;
-  FocusNode _focusNode;
+  late TextEditingController _textController;
+  late ScrollController _scrollController;
+  late FocusNode _focusNode;
   bool _goDown = true;
 
   @override
@@ -49,8 +49,7 @@ class _NetWidgetState extends State<NetWidget> {
                 List<_Net> logs = _Net.list;
                 if (!_selectTypes.contains(_Net.all)) {
                   logs = _Net.list.where((test) {
-                    return _selectTypes.contains(test.type) &&
-                        test.contains(_keyword);
+                    return _selectTypes.contains(test.type) && test.contains(_keyword);
                   }).toList();
                 } else if (_keyword.isNotEmpty) {
                   logs = _Net.list.where((test) {
@@ -61,9 +60,7 @@ class _NetWidgetState extends State<NetWidget> {
                 final len = logs.length;
                 return ListView.separated(
                   itemBuilder: (context, index) {
-                    final item = Logger.config.reverse
-                        ? logs[len - index - 1]
-                        : logs[index];
+                    final item = Logger.config.reverse ? logs[len - index - 1] : logs[index];
                     return _buildItem(item, context);
                   },
                   itemCount: len,
@@ -164,7 +161,7 @@ class _NetWidgetState extends State<NetWidget> {
                         SizedBox(
                           width: 120,
                           child: Text(
-                            "${item.start.hour}:${item.start.minute}:${item.start.second}:${item.start.millisecond}",
+                            "${item.start!.hour}:${item.start!.minute}:${item.start!.second}:${item.start!.millisecond}",
                             style: const TextStyle(fontSize: 14),
                             maxLines: 1,
                           ),
@@ -172,7 +169,7 @@ class _NetWidgetState extends State<NetWidget> {
                         SizedBox(
                           width: 100,
                           child: Text(
-                            "${item.spend ?? "0"} ms",
+                            "${item.spend} ms",
                             style: const TextStyle(fontSize: 14),
                             overflow: TextOverflow.visible,
                             maxLines: 1,
@@ -252,9 +249,7 @@ class _NetWidgetState extends State<NetWidget> {
           selectedColor: const Color(0xFFCBE2F6),
           selected: _selectTypes.contains(f),
           onSelected: (value) {
-            _selectTypes.contains(f)
-                ? _selectTypes.remove(f)
-                : _selectTypes.add(f);
+            _selectTypes.contains(f) ? _selectTypes.remove(f) : _selectTypes.add(f);
             setState(() {});
           },
         ),
@@ -263,8 +258,7 @@ class _NetWidgetState extends State<NetWidget> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 5, 0, 5),
       child: AnimatedCrossFade(
-        crossFadeState:
-            _showSearch ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        crossFadeState: _showSearch ? CrossFadeState.showSecond : CrossFadeState.showFirst,
         duration: const Duration(milliseconds: 300),
         firstChild: Row(
           children: [
@@ -279,9 +273,7 @@ class _NetWidgetState extends State<NetWidget> {
               onPressed: _Net.clear,
             ),
             IconButton(
-              icon: _keyword.isEmpty
-                  ? const Icon(Icons.search)
-                  : const Icon(Icons.filter_1),
+              icon: _keyword.isEmpty ? const Icon(Icons.search) : const Icon(Icons.filter_1),
               onPressed: () {
                 _showSearch = true;
                 setState(() {});

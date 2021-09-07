@@ -189,7 +189,7 @@ class _Log {
     _clearWhenTooMuch();
     length.value++;
     if (Logger.config.printLog) {
-      debugPrint("${log.typeName} ${log.message}${log.detail == null ? '' : '\n${log.detail}'}\n--------------------------------");
+      debugPrint("${log.typeName} ${log.message}${log.detail == 'null' ? '' : '\n${log.detail}'}\n--------------------------------");
     }
   }
 
